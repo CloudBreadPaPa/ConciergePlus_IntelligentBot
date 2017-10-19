@@ -63,34 +63,34 @@ namespace ChatMessageProcessor
                 try
                 {
                     //TODO: 1.Extract the JSON payload from the binary message
-                    var eventBytes = // Get Bytes from event data 
-                    var jsonMessage = //Get UTF 8 string from event bytes 
+                    var eventBytes = eventData.GetBytes(); // Get Bytes from event data 
+                    var jsonMessage = Encoding.UTF8.GetString(eventBytes); //Get UTF 8 string from event bytes 
                     Console.WriteLine("Message Received. Partition '{0}', SessionID '{1}' Data '{2}'", context.Lease.PartitionId, eventData.Properties["SessionId"], jsonMessage);
 
                     //TODO: 2.Deserialize the JSON message payload into an instance of MessageType
-                    var msgObj = JsonConvert.DeserializeObject< /*Complete This*/ >(/*Complete This*/);
+                    var msgObj = JsonConvert.DeserializeObject<MessageType>(jsonMessage); /*Complete This*/ /*Complete This*/
 
                     //TODO: 12 Append sentiment score to chat message object
                     //Add a line here that invokes GetSentimentScore and sets the score on the msg object
 
                     //TODO: 3.Create a BrokeredMessage (for Service Bus) and EventData instance (for EventHubs) from source message body
-                    var updatedEventBytes = // Get bytes from msgObj  
-                    BrokeredMessage chatMessage = // Create a new brokered message from the updated event bytes
-                    EventData updatedEventData = //Create a new event data object from the updated event bytes
+                    var updatedEventBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(msgObj)); // Get bytes from msgObj  
+                    BrokeredMessage chatMessage = new BrokeredMessage(updatedEventBytes); // Create a new brokered message from the updated event bytes
+                    EventData updatedEventData = new EventData(updatedEventBytes); //Create a new event data object from the updated event bytes
 
                     //TODO: 4.Copy the message properties from source to the outgoing message instances
                     foreach (var prop in eventData.Properties)
                     {
-                        chatMessage.Properties.Add(/*Complete This*/, /*Complete This*/);
-                        updatedEventData.Properties.Add(/*Complete This*/, /*Complete This*/);
+                        chatMessage.Properties.Add(prop.Key, prop.Value);
+                        updatedEventData.Properties.Add(prop.Key, prop.Value);
                     }
 
                     //TODO: 5.Send chat message to Topic
-                    _topicClient.Send(/*Complete This*/);
+                    _topicClient.Send(chatMessage);
                     Console.WriteLine("Forwarded message to topic.");
 
                     //TODO: 6.Send chat message to next EventHub (for archival)
-                    _eventHubClient.Send(/*Complete This*/);
+                    _eventHubClient.Send(updatedEventData);
                     Console.WriteLine("Forwarded message to event hub.");
 
                     //TODO: 13.Respond to chat message intent if appropriate
