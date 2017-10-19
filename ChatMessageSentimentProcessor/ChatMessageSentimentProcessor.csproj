@@ -132,6 +132,7 @@
     </None>
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\chatSentimentProcessor - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\ConciergePlusPrcessorWebJob-sehan - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\ConciergePlusProcessorWebJob - Web Deploy.pubxml" />
     <None Include="Properties\webjob-publish-settings.json" />
   </ItemGroup>
